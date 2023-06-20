@@ -15,7 +15,7 @@ import (
 type Product struct {
 	Name   string  `json:"product"`
 	Price  float64 `json:"price"`
-	Rating float64 `json:"rating"`
+	Rating float64 `json:"rating"`z
 }
 
 func main() {
