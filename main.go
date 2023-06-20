@@ -9,16 +9,18 @@ import (
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 type Product struct {
-	Name   string  `json:"name" csv:"name"`
+	Name   string  `json:"product" csv:"product"`
 	Price  float64 `json:"price" csv:"price"`
 	Rating float64 `json:"rating" csv:"rating"`
 }
 
 func main() {
-	filePath := "products.json" // Укажите путь к вашему файлу
+	//filePath := "db.csv"
+	filePath := os.Getenv("file_path") // Получаем путь к файлу с помощью переменного окружения
 
 	// Открытие файла для чтения
 	file, err := os.Open(filePath)
@@ -85,19 +87,22 @@ func readCSV(file io.Reader) ([]Product, error) {
 	}
 
 	var products []Product
-	for _, record := range records {
-		price, err := strconv.ParseFloat(record[1], 64)
+	for i, _ := range records {
+		if i == 0 {
+			continue
+		}
+		price, err := strconv.ParseFloat(strings.TrimSpace(records[i][1]), 64)
 		if err != nil {
 			return nil, err
 		}
 
-		rating, err := strconv.ParseFloat(record[2], 64)
+		rating, err := strconv.ParseFloat(strings.TrimSpace(records[i][2]), 64)
 		if err != nil {
 			return nil, err
 		}
 
 		product := Product{
-			Name:   record[0],
+			Name:   records[i][0],
 			Price:  price,
 			Rating: rating,
 		}
